@@ -1,0 +1,5 @@
+{
+    "tileAscii" :["tileImageX"   ,"tileImageY"  ,"tileName"],
+    "@"         :[0              ,0             ,"player"],
+    "0"         :[1              ,0             ,"empty"]
+}
