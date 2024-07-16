@@ -17,8 +17,12 @@ class SettingAndAction:
             self.keyCodes = json.load(file)
 
         # 맵 설정
-        self.MAXMAPSIZE = 25  # 최대 맵 크기
-        self.MINCHUNKSIZE = 50  # 최소 청크 크기
+
+        with open('./setting.json') as file:
+            self.setting = json.load(file)
+
+        self.MAXMAPSIZE = self.setting["mapSize"]  # 최대 맵 크기
+        self.MINCHUNKSIZE = self.setting["chunkSize"]  # 최소 청크 크기
 
         # pygame 설정
         self.screenEvent = ScreenEvent.ScreenEvent(self.MAXMAPSIZE)
@@ -50,7 +54,8 @@ class SettingAndAction:
                     self.setKeyboardInfo(self.userEvent)
 
             # 화면 업데이트
-            self.screenEvent.showMap(self.chunk.getMap(self.chunkLocation).mapInfo)
+            showMapInfo = self.chunk.getMap(self.chunkLocation)
+            self.screenEvent.showMap(showMapInfo.mapInfo,showMapInfo.creatureInfo)
             pygame.display.update()
 
     # 액션 선택
@@ -62,7 +67,6 @@ class SettingAndAction:
 
     # 액션 수행
     def action(self, event):
-        
         if event == "move":
             inMap = self.chunk.getMap(self.chunkLocation)
             moveLoc = self.player.move(self.userEvent.key)
@@ -70,12 +74,8 @@ class SettingAndAction:
             if movePoint < 0 or movePoint > self.MAXMAPSIZE:
                 moveChunk = self.player.moveChunk(moveLoc)
                 chunkPoint = self.chunkLocation[moveChunk[0]] + moveChunk[1]
-
                 if not (chunkPoint < 0 or chunkPoint > self.MINCHUNKSIZE):
-                    inMap.placeBefore(self.mapLocation)
                     self.chunkLocation[moveChunk[0]] = chunkPoint
-                    beforeLoc = self.mapLocation[:]
-
                     if moveLoc[2] == 0:
                         self.mapLocation[0] = self.MAXMAPSIZE
                     elif moveLoc[2] == 1:
@@ -84,20 +84,16 @@ class SettingAndAction:
                         self.mapLocation[0] = 0
                     elif moveLoc[2] == 3:
                         self.mapLocation[1] = 0
-
                     self.chunk.locMove(self.chunkLocation, self.mapLocation, self.MAXMAPSIZE)
-                    inMap.move(self.mapLocation, None, beforeLoc)
-                    self.chunk.getMap(self.chunkLocation).move(self.mapLocation, 4)
             else:
                 toMoveLoc = self.mapLocation[:]
                 toMoveLoc[moveLoc[0]] = movePoint
-                if not self.player.moveAble(inMap.getTile(toMoveLoc)): return
-                self.mapLocation[moveLoc[0]] = movePoint
-                inMap.move(self.mapLocation, moveLoc[2])
+                if self.player.moveAble(inMap.getTile(toMoveLoc)):
+                    self.mapLocation[moveLoc[0]] = movePoint
+            inMap.clearCreature()
+            inMap.creatureMove(self.mapLocation)
         if event == "end":
             self.player.endGame((self.keyBoardListener,))
-        inMap.printMap()
-        print("_"*25)
     # 키보드 정보 설정
     def setKeyboardInfo(self, event):
         self.userEvent = None

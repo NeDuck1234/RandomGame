@@ -1,0 +1,5 @@
+{
+    "creature"  :["ImageX"       ,"ImageY"      ,"Name"             ,"moveAble"],
+    "_"         :[0              ,0             ,"None"           ,true],
+    "@"         :[1              ,0             ,"Player"           ,true]
+}

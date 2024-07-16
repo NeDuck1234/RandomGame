@@ -23,6 +23,10 @@ class Chunk:
     
     # moveInWorld
     def locMove(self,chunkLocation,mapLocation,size):
-        if not self.chunk[chunkLocation[0]][chunkLocation[1]]:
+        mapInfo = self.chunk[chunkLocation[0]][chunkLocation[1]]
+        if mapInfo:
+            mapInfo.clearCreature()
+            mapInfo.creatureMove(mapLocation)
+        else:
             self.chunk[chunkLocation[0]][chunkLocation[1]] = Map.Map()
-            self.chunk[chunkLocation[0]][chunkLocation[1]].visit(mapLocation,size,1) # 바이옴은 아직 구현중
+            self.chunk[chunkLocation[0]][chunkLocation[1]].visit(mapLocation,1) # 바이옴은 아직 구현중

@@ -11,9 +11,12 @@ class ScreenEvent:
         # 타일 정보 로드
         with open('./Resource/data/tileInfo.json') as file:
             self.tileInfo = json.load(file)
+        with open('./Resource/data/creatureInfo.json') as file:
+            self.creatureInfo = json.load(file)
 
         # 타일 이미지 로드
         self.tileImages = pygame.image.load("./Resource/images/tileImage.png")
+        self.creatureImages = pygame.image.load("./Resource/images/creatureImage.png")
 
         # 캔버스 크기 계산
         self.canvas_width = (self.tileSize + 1) * mapSize
@@ -26,7 +29,7 @@ class ScreenEvent:
     def getScreen(self):
         return self.screen
 
-    def showMap(self, mapInfo):
+    def showMap(self, mapInfo, creatureLocInfo):
         # 화면 지우기
         self.screen.fill((0, 0, 0))
 
@@ -41,4 +44,16 @@ class ScreenEvent:
                     self.tileSize
                 )
                 img = self.tileImages.subsurface(pygame.Rect(imageLocation))
+                self.screen.blit(img, (x * self.tileSize, y * self.tileSize))
+                
+        for y in range(len(creatureLocInfo)):
+            for x in range(len(creatureLocInfo[0])):
+                creature = creatureLocInfo[y][x]
+                imageLocation = (
+                    self.creatureInfo[creature][0] * self.tileSize,
+                    self.creatureInfo[creature][1] * self.tileSize,
+                    self.tileSize,
+                    self.tileSize
+                )
+                img = self.creatureImages.subsurface(pygame.Rect(imageLocation))
                 self.screen.blit(img, (x * self.tileSize, y * self.tileSize))
