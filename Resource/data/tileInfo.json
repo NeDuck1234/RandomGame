@@ -1,5 +1,9 @@
 {
-    "tileAscii" :["tileImageX"   ,"tileImageY"  ,"tileName"],
-    "@"         :[0              ,0             ,"player"],
-    "0"         :[1              ,0             ,"empty"]
+    "tileAscii" :["tileImageX"   ,"tileImageY"  ,"tileName"     ,"moveAble"],
+    "@"         :[0              ,0             ,"player"       ,true],
+    "_"         :[1              ,0             ,"empty"        ,true],
+    ","         :[2              ,0             ,"shortGrass"   ,true],
+    ";"         :[3              ,0             ,"LongGrass"    ,true],
+    "|"         :[4              ,0             ,"treeBottom"   ,false],
+    "^"         :[5              ,0             ,"treeTop"      ,false]
 }

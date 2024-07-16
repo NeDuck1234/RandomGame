@@ -25,4 +25,4 @@ class Chunk:
     def locMove(self,chunkLocation,mapLocation,size):
         if not self.chunk[chunkLocation[0]][chunkLocation[1]]:
             self.chunk[chunkLocation[0]][chunkLocation[1]] = Map.Map()
-            self.chunk[chunkLocation[0]][chunkLocation[1]].visit(mapLocation,size)
+            self.chunk[chunkLocation[0]][chunkLocation[1]].visit(mapLocation,size,1) # 바이옴은 아직 구현중

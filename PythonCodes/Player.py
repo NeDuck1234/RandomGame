@@ -7,6 +7,10 @@ class Player:
         self.keyCodes = json.load(file)
         file.close()
 
+        file = open('./Resource/data/tileInfo.json')
+        self.tileInfo = json.load(file)
+        file.close()
+
     # moveInMapEvent
     def move(self,event):
         value = None
@@ -15,6 +19,9 @@ class Player:
         elif event ==  self.keyCodes["s"]: value = [0,1,2]
         elif event ==  self.keyCodes["d"]: value = [1,1,3]
         return value
+
+    def moveAble(self,tile):
+        return self.tileInfo[tile][3]
     
     # moveInWorldEvent
     def moveChunk(self,event):
