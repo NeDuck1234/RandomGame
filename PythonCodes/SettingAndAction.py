@@ -102,8 +102,12 @@ class SettingAndAction:
         if type(tile) == Tree.Tree:
             if tile.cutting():
                 treeLoc = tileLoc[:]
-                treeTopLoc = [tileLoc[0]-1,tileLoc[1]]
-                mapInfo.setTile([treeLoc,treeTopLoc])
+                count = 1
+                while mapInfo.mapInfo[treeLoc[0]-count][treeLoc[1]] == "^":
+                    count += 1
+                treeLoc = [treeLoc]
+                treeLoc.extend([[tileLoc[0]-count,tileLoc[1]] for count in range(count) ])
+                mapInfo.setTile(treeLoc)
                 
     
     # 키보드 정보 설정
