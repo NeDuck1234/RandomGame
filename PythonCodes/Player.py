@@ -21,7 +21,7 @@ class Player:
         return value
 
     def moveAble(self,tile):
-        return self.tileInfo[tile][3]
+        return self.tileInfo[str(tile)][3]
     
     # moveInWorldEvent
     def moveChunk(self,event):

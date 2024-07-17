@@ -8,6 +8,8 @@ import PythonCodes.Player as Player
 import PythonCodes.ScreenEvent as ScreenEvent
 import threading
 
+from PythonCodes.Tile import Tree
+
 class SettingAndAction:
     def __init__(self):
         pygame.init()
@@ -88,12 +90,22 @@ class SettingAndAction:
             else:
                 toMoveLoc = self.mapLocation[:]
                 toMoveLoc[moveLoc[0]] = movePoint
-                if self.player.moveAble(inMap.getTile(toMoveLoc)):
-                    self.mapLocation[moveLoc[0]] = movePoint
+                tile = inMap.getTile(toMoveLoc)
+                if self.player.moveAble(tile): self.mapLocation[moveLoc[0]] = movePoint
+                if type(tile) != str: self.actions(tile,toMoveLoc,inMap)
             inMap.clearCreature()
             inMap.creatureMove(self.mapLocation)
         if event == "end":
             self.player.endGame((self.keyBoardListener,))
+
+    def actions(self,tile,tileLoc,mapInfo):
+        if type(tile) == Tree.Tree:
+            if tile.cutting():
+                treeLoc = tileLoc[:]
+                treeTopLoc = [tileLoc[0]-1,tileLoc[1]]
+                mapInfo.setTile([treeLoc,treeTopLoc])
+                
+    
     # 키보드 정보 설정
     def setKeyboardInfo(self, event):
         self.userEvent = None

@@ -1,5 +1,6 @@
 import random
 import json
+from PythonCodes.Tile import Tree
 
 class Map:
 
@@ -20,7 +21,9 @@ class Map:
         self.size = setting["mapSize"]
         self.mapInfo = [["_" for j in range(self.size+1)] for i in range(self.size+1)]  # tileInfo
         self.creatureInfo = [["_" for j in range(self.size+1)] for i in range(self.size+1)]  # creatureInfo
-                
+        
+        self.biom = biom
+
         self.mapInfo[location[0]][location[1]] = "@"
 
         if biom == 1: self.setPlainEvents()
@@ -51,10 +54,15 @@ class Map:
         while count > 0:
             x = random.randint(1,self.size-1)
             y = random.randint(1,self.size-1)
-            if self.mapInfo[y][x] in ["|","^","@"] or self.mapInfo[y-1][x] in ["|","^","@"]:continue
-            self.mapInfo[y][x] = "|"
+            if self.mapInfo[y][x] in ["|","^","@"] or self.mapInfo[y-1][x] in ["^","@"]:continue
+            self.mapInfo[y][x] = Tree.Tree()
             self.mapInfo[y-1][x] = "^"
             count -= 1
+
+    def setTile(self,tileLocs):
+        if self.biom == 1:
+            for loc in tileLocs:
+                self.mapInfo[loc[0]][loc[1]] = random.choice(["_",",",";"])
     
     # printMap
     def printMap(self):
