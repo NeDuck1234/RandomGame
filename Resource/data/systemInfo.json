@@ -1,5 +1,8 @@
 {
-    "system"    :["ImageX"       ,"ImageY"      ,"Name"],
+    "system" : null,
+    "tileSize":16,
+
+    "systemImage":["ImageX"       ,"ImageY"      ,"Name"],
     "inventory" :[1              ,0             ,"inventory"],
     "A"         :[0              ,1             ,"A"],
     "B"         :[1              ,1             ,"B"],

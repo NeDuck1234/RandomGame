@@ -1,4 +1,4 @@
-import PythonCodes.SettingAndAction as SettingAndAction
+import PythonCodes.System.GameStart as GameStart
 
 if __name__ == "__main__":
-    SettingAndAction.SettingAndAction()
+    GameStart.GameStart()
