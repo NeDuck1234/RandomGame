@@ -28,5 +28,6 @@ class SaveLoad:
         key = jsonValue["key"]
         f = Fernet(key)
         loadData = jsonValue["saveData"]
-        loadData = f.decrypt(loadData)
+        loadData = json.loads(f.decrypt(loadData))
         return loadData
+        

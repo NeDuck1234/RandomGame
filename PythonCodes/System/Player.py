@@ -34,11 +34,3 @@ class Player:
         elif event[2] == 2: value = [0,1]
         elif event[2] == 3: value = [1,1]
         return value
-    
-    # endGame
-    def endGame(self,listeners):
-        for listener in listeners:
-            try:
-                listener.stop()
-            except:
-                print("error in {listener}")

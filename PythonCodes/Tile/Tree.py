@@ -1,8 +1,7 @@
 import random
 class Tree:
 
-    def loadData(self,tileStr,HP):
-        self.tileStr = tileStr
+    def loadData(self,HP):
         self.HP = HP
 
     def toDic(self):

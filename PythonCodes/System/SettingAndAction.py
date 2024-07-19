@@ -1,7 +1,7 @@
 import pygame
+from pygame.locals import *
 import sys
 import json
-from pygame.locals import *
 
 import PythonCodes.Chunk.Chunk as Chunk
 import PythonCodes.System.Player as Player
@@ -23,8 +23,7 @@ class SettingAndAction:
         }
         return value
 
-    def __init__(self):
-        pygame.init()
+    def __init__(self,screen,loadGame=None):
 
         # keyCodes 로드
         with open('./Resource/data/keycodes.json') as file:
@@ -35,28 +34,57 @@ class SettingAndAction:
         with open('./setting.json') as file:
             self.setting = json.load(file)
 
-        self.MAXMAPSIZE = self.setting["mapSize"]  # 최대 맵 크기
-        self.MINCHUNKSIZE = self.setting["chunkSize"]  # 최소 청크 크기
-
+        
         # pygame 설정
-        generateScreen = GenerateScreen.GenerateScreen()
-        screen = generateScreen.getScreen()
-        images = generateScreen.getImages()
-        infos = generateScreen.getInfos()
-        self.InGameScene = InGameScene.InGameScene(self.MAXMAPSIZE,screen,images,infos)
+        self.generateScreen = GenerateScreen.GenerateScreen()
+        images = self.generateScreen.getImages()
+        infos = self.generateScreen.getInfos()
+
+
+        self.InGameScene = InGameScene.InGameScene(screen,images,infos)
 
         # 플레이어 설정
         self.player = Player.Player()
+        
+        # 키보드 설정
+        self.userEvent = []
 
         # 초기 위치 설정
+        if self.loadGame(loadGame):
+            self.mainloop()
+            return
+
+        self.MAXMAPSIZE = self.setting["mapSize"]  # 최대 맵 크기
+        self.MINCHUNKSIZE = self.setting["chunkSize"]  # 최소 청크 크기
+
         self.chunkLocation = [self.MINCHUNKSIZE//2, self.MINCHUNKSIZE//2]
         self.mapLocation = [self.MAXMAPSIZE//2, self.MAXMAPSIZE//2]
-        self.chunk = Chunk.Chunk(self.chunkLocation, self.mapLocation, self.MINCHUNKSIZE, self.MAXMAPSIZE)
 
-        self.userEvent = []
+        self.chunk = Chunk.Chunk(self.chunkLocation, self.mapLocation, self.MINCHUNKSIZE, self.MAXMAPSIZE)
 
         # pygame main loop 시작
         self.mainloop()
+        return
+    
+    def loadGame(self,datas):
+        if not datas: return False
+
+        chunkInfo = datas["chunkInfo"]
+        self.chunkLocation = chunkInfo["chunkLocation"]
+        self.mapLocation = chunkInfo["mapLocation"]
+
+        self.MAXMAPSIZE = None
+        for row in chunkInfo["chunk"]:
+            for mapInfo in row:
+                if mapInfo: 
+                    self.MAXMAPSIZE = mapInfo["size"]
+                    break
+            if self.MAXMAPSIZE: break
+        self.MINCHUNKSIZE = chunkInfo["size"]  # 최소 청크 크기
+
+        self.chunk = Chunk.Chunk(self.chunkLocation, self.mapLocation, self.MINCHUNKSIZE, self.MAXMAPSIZE,chunkInfo["chunk"])
+        
+        return True
 
     # pygame main loop
     def mainloop(self):
@@ -74,7 +102,10 @@ class SettingAndAction:
             # 화면 업데이트
             showMapInfo = self.chunk.getMap(self.chunkLocation)
             self.InGameScene.showMap(showMapInfo.mapInfo,showMapInfo.creatureInfo)
-            pygame.display.update()
+            self.updateScreen()
+    
+    def updateScreen(self):
+        self.generateScreen.updateScreen()
 
     # 액션 선택
     def actionSelect(self):
@@ -100,8 +131,8 @@ class SettingAndAction:
             self.saveGame()
             return
         if event == "end":
-            self.player.endGame((self.keyBoardListener,))
-            return
+            pygame.quit()
+            sys.exit()
 
     # 이동
     def moveEvent(self,event):

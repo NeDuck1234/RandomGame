@@ -2,14 +2,23 @@ import PythonCodes.Chunk.Map as Map
 import copy
 
 class Chunk:
-    
-    def loadData(self,chunk):
-        self.chunk = chunk
 
     # 생성
-    def __init__(self,chunkLocation,mapLocation,size,mapSize):
-        self.chunk = [[0 for j in range(size+1)] for i in range(size+1)]
-        self.locMove(chunkLocation,mapLocation,mapSize)
+    def __init__(self,chunkLocation,mapLocation,size,mapSize,loadData = None):
+        if loadData:
+            self.chunk = loadData
+            self.loadMap()
+        else:
+            self.chunk = [[0 for j in range(size+1)] for i in range(size+1)]
+            self.locMove(chunkLocation,mapLocation,mapSize)
+
+    def loadMap(self):
+        for y,row in enumerate(self.chunk):
+            for x,mapInfo in enumerate(row):
+                if not mapInfo: continue
+                mapObject = Map.Map()
+                mapObject.loadData(mapInfo)
+                self.chunk[y][x] = mapObject
 
     def getLocation(self,chunkLocation,mapLocation):
         self.chunkLocation = chunkLocation

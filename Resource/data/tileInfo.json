@@ -1,6 +1,6 @@
 {
     "tileAscii" :["tileImageX"   ,"tileImageY"  ,"tileName"     ,"moveAble"],
-    "_"         :[0              ,0             ,"plainEmpty"        ,true],
+    "_"         :[0              ,0             ,"plainEmpty"   ,true],
     ","         :[1              ,0             ,"shortGrass"   ,true],
     ";"         :[2              ,0             ,"LongGrass"    ,true],
     "|"         :[3              ,0             ,"treeBottom"   ,false],

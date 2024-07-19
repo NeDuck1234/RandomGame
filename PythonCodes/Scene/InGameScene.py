@@ -3,7 +3,7 @@ import json
 from pygame.locals import *
 
 class InGameScene:
-    def __init__(self, mapSize,screen,images,infos):
+    def __init__(self,screen,images,infos):
         self.screen = screen
 
         # 타일 정보 로드

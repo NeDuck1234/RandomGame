@@ -6,11 +6,28 @@ import copy
 
 class Map:
 
-    def loadData(self,size,mapInfo,creatureInfo,biom):
-        self.size = size
-        self.mapInfo = mapInfo
-        self.creatureInfo = creatureInfo
-        self.biom = biom
+    def loadData(self,mapInfo):
+        self.size = mapInfo["size"]
+        self.mapInfo = mapInfo["mapInfo"]
+        self.creatureInfo = mapInfo["creature"]
+        self.biom = mapInfo["biom"]
+        self.loadTile()
+
+    def loadTile(self):
+        for y,row in enumerate(self.mapInfo):
+            for x,tileInfo in enumerate(row):
+                if type(tileInfo) == str: continue
+                tileObject = self.checkTile(tileInfo)
+                tileObject.loadData(tileInfo)
+                self.mapInfo[y][x] = tileObject
+
+    def checkTile(self,tileInfo):
+        objectInfo = None
+        match tileInfo["tileStr"]:
+            case "|":
+                objectInfo = Tree.Tree()
+                objectInfo.loadData(tileInfo["HP"])
+        return objectInfo
 
     def toDic(self):
         mapInfo = copy.deepcopy(self.mapInfo)
