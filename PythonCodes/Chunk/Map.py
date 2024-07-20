@@ -1,6 +1,8 @@
 import random
 import json
+
 from PythonCodes.Tile import Tree
+from PythonCodes.Item import Wood
 
 import copy
 
@@ -10,6 +12,7 @@ class Map:
         self.size = mapInfo["size"]
         self.mapInfo = mapInfo["mapInfo"]
         self.creatureInfo = mapInfo["creature"]
+        self.itemInfo = mapInfo["itemInfo"]
         self.biom = mapInfo["biom"]
         self.loadTile()
 
@@ -18,8 +21,13 @@ class Map:
             for x,tileInfo in enumerate(row):
                 if type(tileInfo) == str: continue
                 tileObject = self.checkTile(tileInfo)
-                tileObject.loadData(tileInfo)
                 self.mapInfo[y][x] = tileObject
+
+        for y,row in enumerate(self.itemInfo):
+            for x,itemInfo in enumerate(row):
+                if type(itemInfo) == str: continue
+                tileObject = self.checkItem(itemInfo)
+                self.itemInfo[y][x] = tileObject
 
     def checkTile(self,tileInfo):
         objectInfo = None
@@ -29,16 +37,32 @@ class Map:
                 objectInfo.loadData(tileInfo["HP"])
         return objectInfo
 
+    def checkItem(self,itemInfo):
+        objectInfo = None
+        match itemInfo["tileStr"]:
+            case "|":
+                objectInfo = Wood.Wood()
+                objectInfo.loadData(itemInfo["count"])
+        return objectInfo
+
     def toDic(self):
         mapInfo = copy.deepcopy(self.mapInfo)
         for y in range(self.size):
             for x in range(self.size):
                 if type(mapInfo[y][x]) != str:
                     mapInfo[y][x] = mapInfo[y][x].toDic()
+
+        itemInfo = copy.deepcopy(self.itemInfo)
+        for y in range(self.size):
+            for x in range(self.size):
+                if type(itemInfo[y][x]) != str:
+                    itemInfo[y][x] = itemInfo[y][x].toDic()
+
         value = {
             "size" : self.size,
             "mapInfo" : mapInfo,
             "creature" : self.creatureInfo[:],
+            "itemInfo" : itemInfo,
             "biom" : self.biom
         }
         return value
@@ -58,8 +82,9 @@ class Map:
         with open('./setting.json') as file:
             setting = json.load(file)
         self.size = setting["mapSize"]
-        self.mapInfo = [["_" for j in range(self.size+1)] for i in range(self.size+1)]  # tileInfo
-        self.creatureInfo = [["_" for j in range(self.size+1)] for i in range(self.size+1)]  # creatureInfo
+        self.mapInfo = [["_" for j in range(self.size+1)] for i in range(self.size+1)]
+        self.creatureInfo = [["_" for j in range(self.size+1)] for i in range(self.size+1)]
+        self.itemInfo = [["_" for j in range(self.size+1)] for i in range(self.size+1)]
         
         self.biom = biom
 
@@ -102,6 +127,9 @@ class Map:
         if self.biom == 1:
             for loc in tileLocs:
                 self.mapInfo[loc[0]][loc[1]] = random.choice(["_",",",";"])
+
+    def setItem(self,itemLoc,itemInfo):
+        self.itemInfo[itemLoc[0]][itemLoc[1]] = itemInfo
     
     # printMap
     def printMap(self):

@@ -1,0 +1,7 @@
+{
+    "SoundName" :["SoundType"   ,"SoundLocation"],
+
+    "Select"    :["SE"          ,"./Resource/sounds/se/select.wav"],
+    "Choose"    :["SE"          ,"./Resource/sounds/se/choose.wav"]
+
+}

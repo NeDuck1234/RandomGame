@@ -14,6 +14,8 @@ import threading
 
 from PythonCodes.Tile.Tree import Tree
 
+from PythonCodes.Item.Inventory import Inventory
+
 class SettingAndAction:
 
     def toDic(self):
@@ -59,7 +61,11 @@ class SettingAndAction:
 
         self.chunkLocation = [self.MINCHUNKSIZE//2, self.MINCHUNKSIZE//2]
         self.mapLocation = [self.MAXMAPSIZE//2, self.MAXMAPSIZE//2]
+        
+        # 인벤토리 생성
+        self.inventory = Inventory()
 
+        # 청크 생성
         self.chunk = Chunk.Chunk(self.chunkLocation, self.mapLocation, self.MINCHUNKSIZE, self.MAXMAPSIZE)
 
         # pygame main loop 시작
@@ -84,6 +90,9 @@ class SettingAndAction:
 
         self.chunk = Chunk.Chunk(self.chunkLocation, self.mapLocation, self.MINCHUNKSIZE, self.MAXMAPSIZE,chunkInfo["chunk"])
         
+        inventoryInfo = datas["inventoryInfo"]
+        self.inventory = Inventory(inventoryInfo)
+
         return True
 
     # pygame main loop
@@ -101,7 +110,9 @@ class SettingAndAction:
 
             # 화면 업데이트
             showMapInfo = self.chunk.getMap(self.chunkLocation)
-            self.InGameScene.showMap(showMapInfo.mapInfo,showMapInfo.creatureInfo)
+            self.InGameScene.showMap(showMapInfo.mapInfo,showMapInfo.creatureInfo,showMapInfo.itemInfo)
+            self.InGameScene.showInventory(self.inventory.getInventory())
+            self.InGameScene.showSystem(self.mapLocation,showMapInfo.itemInfo)
             self.updateScreen()
     
     def updateScreen(self):
@@ -111,6 +122,8 @@ class SettingAndAction:
     def actionSelect(self):
         if self.userEvent[-1] in self.keyCodes["move"]:
             self.action("move")
+        elif self.userEvent[-1] == self.keyCodes["getItem"]:
+            self.action("getItem")
         elif self.userEvent == self.keyCodes["save"]:
             self.action("save")
         elif self.userEvent[-1] == self.keyCodes["esc"]:
@@ -126,11 +139,11 @@ class SettingAndAction:
     def action(self, event):
         if event == "move":
             self.moveEvent(event)
-            return
-        if event == "save":
+        elif event == "getItem":
+            self.getItem()
+        elif event == "save":
             self.saveGame()
-            return
-        if event == "end":
+        elif event == "end":
             pygame.quit()
             sys.exit()
 
@@ -175,17 +188,22 @@ class SettingAndAction:
         self.chunk.getLocation(self.chunkLocation,self.mapLocation)
         save = SaveLoad.SaveLoad()
         save.saveGame(
-            self.chunk
+            self.chunk,
+            self.inventory
         )
+
+    # 아이템 획득
+    def getItem(self):
+        inMap = self.chunk.getMap(self.chunkLocation)
+        item = inMap.itemInfo[self.mapLocation[0]][self.mapLocation[1]]
+        if type(item) == str: return
+        if self.inventory.itemExist(item.tileStr):
+            inventoryItem = self.inventory.getItem(item.tileStr)
+            inventoryItem.count += item.count
+        else:
+            self.inventory.setItem(item)
+        inMap.itemInfo[self.mapLocation[0]][self.mapLocation[1]] = "_"
 
     # 동작
     def actions(self,tile,tileLoc,mapInfo):
-        if type(tile) == Tree:
-            if tile.cutting():
-                treeLoc = tileLoc[:]
-                count = 1
-                while mapInfo.mapInfo[treeLoc[0]-count][treeLoc[1]] == "^":
-                    count += 1
-                treeLoc = [treeLoc]
-                treeLoc.extend([[tileLoc[0]-count,tileLoc[1]] for count in range(count) ])
-                mapInfo.setTile(treeLoc)
+        if type(tile) == Tree: tile.cuttingAction(tileLoc,mapInfo)

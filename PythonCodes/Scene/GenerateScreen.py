@@ -12,22 +12,27 @@ class GenerateScreen:
             self.creatureInfo = json.load(file)
         with open('./Resource/data/systemInfo.json') as file:
             self.systemInfo = json.load(file)
+        with open('./Resource/data/itemInfo.json') as file:
+            self.itemInfo = json.load(file)
 
         self.tileSize = self.systemInfo["tileSize"]
+
+        self.tileImages = pygame.image.load("./Resource/images/tileImage.png")
+        self.creatureImages = pygame.image.load("./Resource/images/creatureImage.png")
+        self.systemImage = pygame.image.load("./Resource/images/systemImage.png")
+        self.itemImage = pygame.image.load("./Resource/images/itemImage.png")
+
         mapSize = self.setting["mapSize"]
 
         # 캔버스 크기 계산
         #                   기본 화면                      + 인벤토리
         screenWidth = (self.tileSize+1) * mapSize + self.tileSize*2
-        screenHeight = (self.tileSize+1) * mapSize
+        #                   기본 화면                      + 시스템 메시지
+        screenHeight = (self.tileSize+1) * mapSize + self.tileSize
 
         # pygame 설정
         self.screen = pygame.display.set_mode((screenWidth, screenHeight))
         pygame.display.set_caption("Game")
-
-        self.tileImages = pygame.image.load("./Resource/images/tileImage.png")
-        self.creatureImages = pygame.image.load("./Resource/images/creatureImage.png")
-        self.systemImage = pygame.image.load("./Resource/images/systemImage.png")
     
     def getScreen(self):
         return self.screen
@@ -36,10 +41,10 @@ class GenerateScreen:
         pygame.display.update()
 
     def getImages(self):
-        return [self.tileImages,self.creatureImages,self.systemImage]
+        return [self.tileImages,self.creatureImages,self.systemImage,self.itemImage]
 
     def getInfos(self):
-        return [self.setting,self.tileInfo,self.creatureInfo,self.systemInfo]
+        return [self.setting,self.tileInfo,self.creatureInfo,self.systemInfo,self.itemInfo]
 
     def textShowWidth(self,showText,startX,startY):
         for x, text in enumerate(showText):

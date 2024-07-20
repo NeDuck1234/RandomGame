@@ -7,6 +7,7 @@ import PythonCodes.Scene.GenerateScreen as GenerateScreen
 
 import PythonCodes.System.SettingAndAction as SettingAndAction
 import PythonCodes.System.SaveLoad as SaveLoad
+import PythonCodes.System.SoundEffect as SoundEffect
 
 class TitleScene:
     def __init__(self,screen):
@@ -15,6 +16,8 @@ class TitleScene:
         self.generateScreen = GenerateScreen.GenerateScreen()
         images = self.generateScreen.getImages()
         infos = self.generateScreen.getInfos()
+
+        self.SoundEffect = SoundEffect.SoundEffect()
 
         # 타일 정보 로드
         self.setting = infos[0]
@@ -56,12 +59,15 @@ class TitleScene:
 
     def titleAction(self,event):
         if event == self.keyCodes["up"]:
+            self.SoundEffect.playSound("Choose")
             self.selectAction -= 1
             if self.selectAction < 0: self.selectAction = 2
         elif event == self.keyCodes["down"]:
+            self.SoundEffect.playSound("Choose")
             self.selectAction += 1
             if self.selectAction > 2: self.selectAction = 0
         elif event == self.keyCodes["enter"]:
+            self.SoundEffect.playSound("Select")
             self.selectActionFunction()
         elif event == self.keyCodes["esc"]:
             self.exitGame()
@@ -85,6 +91,8 @@ class TitleScene:
         self.screen.fill((0, 0, 0))
 
         # 텍스트 그리기
+        self.generateScreen.textShowWidth("THE_SURVIVE",80,96)
+        self.generateScreen.textShowWidth("BY - NEDUCK",80,128)
         self.generateScreen.textShowWidth("START",80,288)
         self.generateScreen.textShowWidth("LOAD",80,320)
         self.generateScreen.textShowWidth("EXIT",80,352)

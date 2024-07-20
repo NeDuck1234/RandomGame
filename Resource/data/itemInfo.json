@@ -1,0 +1,5 @@
+{
+    "itemAscii" :["itemImageX"   ,"itemImageY"  ,"itemName" ,"itemType" ,"Single"],
+    "_"         :[0              ,0             ,"Empty"    ,0          ,true],
+    "|"         :[1              ,0             ,"Wood"     ,1          ,false]
+}

@@ -1,12 +1,13 @@
 import json
-import PythonCodes.Chunk as Chunk
+
 from cryptography.fernet import Fernet
 
 class SaveLoad:
 
-    def saveGame(self,chunk):
+    def saveGame(self,chunk,inventory):
         value = {
-            "chunkInfo" : chunk.toDic()
+            "chunkInfo" : chunk.toDic(),
+            "inventoryInfo" : inventory.toDic()
         }
         value = json.dumps(value).encode("utf-8")
         key = Fernet.generate_key()
