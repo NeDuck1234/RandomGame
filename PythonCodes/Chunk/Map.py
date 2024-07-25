@@ -1,12 +1,16 @@
 import random
 import json
 
-from PythonCodes.Tile import Tree
-from PythonCodes.Item import Wood
+from PythonCodes.Tile.GetTile import GetTile
+from PythonCodes.Item.GetItem import GetItem
 
 import copy
 
 class Map:
+
+    def __init__(self):
+        self.GetTile = GetTile()
+        self.GetItem = GetItem()
 
     def loadData(self,mapInfo):
         self.size = mapInfo["size"]
@@ -29,11 +33,12 @@ class Map:
                 tileObject = self.checkItem(itemInfo)
                 self.itemInfo[y][x] = tileObject
 
+
     def checkTile(self,tileInfo):
         objectInfo = None
         match tileInfo["tileStr"]:
             case "|":
-                objectInfo = Tree.Tree()
+                objectInfo = self.GetTile.getTree()
                 objectInfo.loadData(tileInfo["HP"])
         return objectInfo
 
@@ -41,7 +46,7 @@ class Map:
         objectInfo = None
         match itemInfo["tileStr"]:
             case "|":
-                objectInfo = Wood.Wood()
+                objectInfo = self.GetItem.getWood()
                 objectInfo.loadData(itemInfo["count"])
         return objectInfo
 
@@ -66,7 +71,24 @@ class Map:
             "biom" : self.biom
         }
         return value
+    
+    def arroundFromLocation(self,loc):
+        tile,creature,item = [[],[],[]],[[],[],[]],[[],[],[]]
+        width = [loc[1]-1,loc[1],loc[1]+1]
+        height = [loc[0]-1,loc[0],loc[0]+1]
+        for idxY,y in enumerate(height):
+            for x in width:
+                if x in range(0,self.size+1) or y in range(0,self.size+1):
+                    tile[idxY].append(self.mapInfo[y][x])
+                    creature[idxY].append(self.creatureInfo[y][x])
+                    item[idxY].append(self.itemInfo[y][x])
+                else:
+                    tile[idxY].append(None)
+                    creature[idxY].append(None)
+                    item[idxY].append(None)
+        return (tile,creature,item)
 
+                
     def clearCreature(self):
         self.creatureInfo = [["_" for j in range(self.size+1)] for i in range(self.size+1)]
 
@@ -119,7 +141,7 @@ class Map:
             x = random.randint(1,self.size-1)
             y = random.randint(1,self.size-1)
             if self.mapInfo[y][x] in ["|","^","@"] or self.mapInfo[y-1][x] in ["^","@"]:continue
-            self.mapInfo[y][x] = Tree.Tree()
+            self.mapInfo[y][x] = self.GetTile.getTree()
             self.mapInfo[y-1][x] = "^"
             count -= 1
 

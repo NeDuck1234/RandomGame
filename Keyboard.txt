@@ -1,0 +1,23 @@
+---- KeyBoard ----
+
+- a = a , shift + a = A -
+- s = s , shift + s = S -
+
+Title
+    arrow   : change option
+    enter   : select
+
+Fild
+    arrow   : move
+    g       : get item
+    c       : craft screen
+    s       : set block
+    d       : drop item
+    
+    S       : save game
+    esc     : exit
+
+Crafting
+    arrow   : change option
+    enter   : select
+    esc     : fild screen

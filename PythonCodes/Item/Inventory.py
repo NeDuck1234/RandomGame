@@ -1,4 +1,5 @@
 from PythonCodes.Item import Wood
+from PythonCodes.Item import CraftingTable
 
 import copy
 
@@ -14,8 +15,15 @@ class Inventory:
 
     def __init__(self,loadData=None):
         self.inventory = []
+        self.choose = 0
         if loadData:
             self.loadInventory(loadData)
+    
+    def setChoose(self,choose):
+        self.choose = choose
+
+    def getChoose(self):
+        return self.choose
 
     def loadInventory(self,loadData):
         for idx,item in enumerate(loadData["inventory"]):
@@ -28,10 +36,15 @@ class Inventory:
             case "|":
                 objectInfo = Wood.Wood()
                 objectInfo.loadData(itemInfo["count"])
+            case "#":
+                objectInfo = CraftingTable.CraftingTable()
         return objectInfo
 
     def setItem(self,item):
         self.inventory.append(item)
+    
+    def removeItem(self,idx):
+        self.inventory.pop(idx)
     
     def getInventory(self):
         return self.inventory

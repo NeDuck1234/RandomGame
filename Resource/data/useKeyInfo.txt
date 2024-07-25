@@ -1,0 +1,10 @@
+__ inGameScreen__
+s : setBlock | S : save
+g : getItem | G : no
+c : craft | C : no
+d : dropItem | D : no
+
+__ craftScreen__
+arrow : move
+
+1~0 | shift 1~0 : chooseInventory

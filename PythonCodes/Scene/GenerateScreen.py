@@ -14,6 +14,8 @@ class GenerateScreen:
             self.systemInfo = json.load(file)
         with open('./Resource/data/itemInfo.json') as file:
             self.itemInfo = json.load(file)
+        with open('./Resource/data/craftingInfo.json') as file:
+            self.craftInfo = json.load(file)
 
         self.tileSize = self.systemInfo["tileSize"]
 
@@ -44,9 +46,9 @@ class GenerateScreen:
         return [self.tileImages,self.creatureImages,self.systemImage,self.itemImage]
 
     def getInfos(self):
-        return [self.setting,self.tileInfo,self.creatureInfo,self.systemInfo,self.itemInfo]
+        return [self.setting,self.tileInfo,self.creatureInfo,self.systemInfo,self.itemInfo,self.craftInfo]
 
-    def textShowWidth(self,showText,startX,startY):
+    def textShowWidth(self,showText,startX,startY,dark=None):
         for x, text in enumerate(showText):
             imageLocation = (
                 self.systemInfo[text][0] * self.tileSize,
@@ -55,4 +57,5 @@ class GenerateScreen:
                 self.tileSize
             )
             img = self.systemImage.subsurface(pygame.Rect(imageLocation))
+            if dark: img.set_alpha(100)
             self.screen.blit(img, (x * self.tileSize + startX, startY))

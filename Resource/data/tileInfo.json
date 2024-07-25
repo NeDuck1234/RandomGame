@@ -4,5 +4,6 @@
     ","         :[1              ,0             ,"shortGrass"   ,true],
     ";"         :[2              ,0             ,"LongGrass"    ,true],
     "|"         :[3              ,0             ,"treeBottom"   ,false],
-    "^"         :[4              ,0             ,"treeTop"      ,false]
+    "^"         :[4              ,0             ,"treeTop"      ,false],
+    "#"         :[5              ,0             ,"craftTable"   ,false]
 }

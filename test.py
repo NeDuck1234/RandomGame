@@ -1,2 +1,3 @@
-a = "asdf"
-print(len(a))
+a = []
+if a:
+    print(1)

@@ -92,7 +92,7 @@ class TitleScene:
 
         # 텍스트 그리기
         self.generateScreen.textShowWidth("THE_SURVIVE",80,96)
-        self.generateScreen.textShowWidth("BY - NEDUCK",80,128)
+        self.generateScreen.textShowWidth("BY - NEDUCK",80,128,True)
         self.generateScreen.textShowWidth("START",80,288)
         self.generateScreen.textShowWidth("LOAD",80,320)
         self.generateScreen.textShowWidth("EXIT",80,352)

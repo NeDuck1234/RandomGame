@@ -1,5 +1,4 @@
 import pygame
-import json
 from pygame.locals import *
 
 import PythonCodes.Scene.GenerateScreen as GenerateScreen
@@ -41,20 +40,27 @@ class InGameScene:
 
     def showInventory(self,inventoryInfo):
         # 인벤토리 그리기
-        for y in range(10):
-            for x in range(2):
+        numberOfInventory = 0
+        choosedInven = 0
+        for x in range(2):
+            for y in range(10):
                 inventory = self.systemInfo["inventory"]
+                if inventoryInfo.getChoose() == numberOfInventory: choosedInven = 16
+                else: choosedInven = 0
                 imageLocation = (
-                    inventory[0] * self.tileSize,
+                    inventory[0] * self.tileSize+choosedInven,
                     inventory[1] * self.tileSize,
                     self.tileSize,
                     self.tileSize
                 )
                 img = self.systemImage.subsurface(pygame.Rect(imageLocation))
-                self.screen.blit(img, (x * self.tileSize + self.inGameSize, y * self.tileSize))
+                self.screen.blit(img, (x*self.tileSize+self.inGameSize, y * self.tileSize))
+                numberOfInventory += 1
 
+
+        inventory = inventoryInfo.getInventory()
         # 아이템 표시
-        for idx, item in enumerate(inventoryInfo):
+        for idx, item in enumerate(inventory):
             itemInfo = self.itemInfo[item.tileStr]
             imageLocation = (
                 itemInfo[0] * self.tileSize,
@@ -69,18 +75,19 @@ class InGameScene:
 
             # 개수 표시
             count = str(item.getCount())
-            unit = len(count)
-            for idx,number in enumerate(count):
-                text = f"i{number}"
-                systemInfo = self.systemInfo[text]
-                imageLocation = (
-                    systemInfo[0] * self.tileSize,
-                    systemInfo[1] * self.tileSize,
-                    self.tileSize,
-                    self.tileSize
-                )
-                img = self.systemImage.subsurface(pygame.Rect(imageLocation))
-                self.screen.blit(img, (x * self.tileSize + self.inGameSize-3*(unit-idx-1), y * self.tileSize))
+            if count != "single":
+                unit = len(count)
+                for idx,number in enumerate(count):
+                    text = f"i{number}"
+                    systemInfo = self.systemInfo[text]
+                    imageLocation = (
+                        systemInfo[0] * self.tileSize,
+                        systemInfo[1] * self.tileSize,
+                        self.tileSize,
+                        self.tileSize
+                    )
+                    img = self.systemImage.subsurface(pygame.Rect(imageLocation))
+                    self.screen.blit(img, (x * self.tileSize + self.inGameSize-3*(unit-idx-1), y * self.tileSize))
 
 
     def showMap(self, mapInfo, creatureLocInfo, itemInfo):

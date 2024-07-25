@@ -1,5 +1,6 @@
 {
-    "itemAscii" :["itemImageX"   ,"itemImageY"  ,"itemName" ,"itemType" ,"Single"],
-    "_"         :[0              ,0             ,"Empty"    ,0          ,true],
-    "|"         :[1              ,0             ,"Wood"     ,1          ,false]
+    "itemAscii" :["itemImageX"   ,"itemImageY"  ,"itemName"     ,"itemType" ,"Single"   ,"itemNumber"   ,"canPlace"],
+    "_"         :[0              ,0             ,"Empty"        ,0          ,true       ,0              ,false],
+    "|"         :[1              ,0             ,"Wood"         ,1          ,false      ,1              ,false],
+    "#"         :[2              ,0             ,"CraftTable"   ,1          ,true       ,2              ,true]
 }
